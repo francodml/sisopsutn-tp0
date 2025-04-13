@@ -29,7 +29,16 @@ int main(void)
 	// Usando el config creado previamente, leemos los valores del config y los 
 	// dejamos en las variables 'ip', 'puerto' y 'valor'
 
+    if (config==NULL) {
+        log_error(logger, "No se pudo cargar el archivo de configuracion, abortando...");
+        abort();
+    }
+
+    valor = config_get_string_value(config, "CLAVE");
+
 	// Loggeamos el valor de config
+
+    log_info(logger, "Obtenido valor: %s", valor);
 
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
@@ -67,6 +76,8 @@ t_config* iniciar_config(void)
 {
 	t_config* nuevo_config;
 
+    nuevo_config = config_create("./cliente.config");
+
 	return nuevo_config;
 }
 
@@ -99,7 +110,10 @@ void paquete(int conexion)
 
 void terminar_programa(int conexion, t_log* logger, t_config* config)
 {
-    log_destroy(logger);
 	/* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config) 
 	  con las funciones de las commons y del TP mencionadas en el enunciado */
+
+    log_destroy(logger);
+
+    config_destroy(config);
 }
