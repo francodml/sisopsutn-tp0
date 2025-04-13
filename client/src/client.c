@@ -45,7 +45,7 @@ int main(void)
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
-	leer_consola(logger);
+	 leer_consola(logger);
 
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
@@ -104,11 +104,25 @@ void leer_consola(t_log* logger)
 void paquete(int conexion)
 {
 	// Ahora toca lo divertido!
-	char* leido;
-	t_paquete* paquete;
+	char* leido = NULL;
+	t_paquete* paquete = crear_paquete();
 
 	// Leemos y esta vez agregamos las lineas al paquete
 
+    do {
+        if(leido) { // Liberamos la memoria si ya hay un valor
+            free(leido);
+            leido = (char*)NULL;
+        }
+        leido = readline("> "); // Leemos entrada del usuario
+        agregar_a_paquete(paquete, leido, strlen(leido)+1);
+    } while (strcmp("",leido)); // Surge la condicion del dowhile, si el string no es vacio, seguimos.
+
+    free(leido); // Ultimo free (por las dudas)
+
+    enviar_paquete(paquete, conexion);
+
+    eliminar_paquete(paquete);
 
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
 	
@@ -123,5 +137,5 @@ void terminar_programa(int conexion, t_log* logger, t_config* config)
       
       config_destroy(config);
       
-      close(conexion);
+      liberar_conexion(conexion);
 }
