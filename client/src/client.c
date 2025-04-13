@@ -83,16 +83,18 @@ t_config* iniciar_config(void)
 
 void leer_consola(t_log* logger)
 {
-	char* leido;
+	char* leido = NULL; // Cambio: inicializamos el pointer a nulo para evitar apuntar a basura.
 
-	// La primera te la dejo de yapa
-	leido = readline("> ");
+    do {
+        if(leido) { // Liberamos la memoria si ya hay un valor
+            free(leido);
+            leido = (char*)NULL;
+        }
+        leido = readline("> "); // Leemos entrada del usuario
+        log_info(logger, "%s\n", leido); // y la imprimimos a consola
+    } while (strcmp("",leido)); // Surge la condicion del dowhile, si el string no es vacio, seguimos.
 
-	// El resto, las vamos leyendo y logueando hasta recibir un string vacío
-
-
-	// ¡No te olvides de liberar las lineas antes de regresar!
-
+    free(leido); // Ultimo free (por las dudas)
 }
 
 void paquete(int conexion)
