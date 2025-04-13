@@ -34,6 +34,8 @@ int main(void)
         abort();
     }
 
+    ip = config_get_string_value(config, "IP");
+    puerto = config_get_string_value(config, "PUERTO");
     valor = config_get_string_value(config, "CLAVE");
 
 	// Loggeamos el valor de config
